@@ -1,6 +1,7 @@
 package ir.malakouti.questionaire.convertor;
 
 import ir.malakouti.questionaire.model.dto.AnswerDto;
+import ir.malakouti.questionaire.model.dto.AnswerOutputDto;
 import ir.malakouti.questionaire.model.entity.AnswerEntity;
 
 public class AnswerConvertor {
@@ -24,7 +25,6 @@ public class AnswerConvertor {
                 .customer(answerDto.getCustomer())
                 .question(answerDto.getQuestion())
                 .rate(answerDto.getRate()).build();
-
         if (answerDto.getId() != null) {
             answerDto.setId(answerDto.getId());
         }
@@ -32,6 +32,12 @@ public class AnswerConvertor {
         return answerEntity;
     }
 
+    public AnswerOutputDto inputDtoToOutputDto(AnswerDto answerDto) {
+        return AnswerOutputDto.builder()
+                .id(answerDto.getId())
+                .customer(answerDto.getCustomer())
+                .build();
+    }
 
 
 }
