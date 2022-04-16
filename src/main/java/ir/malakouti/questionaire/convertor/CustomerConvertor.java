@@ -1,6 +1,7 @@
 package ir.malakouti.questionaire.convertor;
 
 import ir.malakouti.questionaire.model.dto.CustomerDto;
+import ir.malakouti.questionaire.model.dto.CustomerOutputDto;
 import ir.malakouti.questionaire.model.entity.CustomerEntity;
 
 public class CustomerConvertor {
@@ -40,5 +41,13 @@ public class CustomerConvertor {
             customerEntity.setPersonalCharacterNumber(customerDto.getPersonalCharacterNumber());
 
         return customerEntity;
+    }
+
+    public CustomerOutputDto inputDtoToOutputDto(CustomerDto customerDto){
+        return CustomerOutputDto.builder()
+                .id(customerDto.getId())
+                .firstName(customerDto.getFirstName())
+                .lastName(customerDto.getLastName())
+                .build();
     }
 }
