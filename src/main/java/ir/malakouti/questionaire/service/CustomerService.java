@@ -9,6 +9,7 @@ import ir.malakouti.questionaire.repo.CustomerRepository;
 import ir.malakouti.questionaire.service.core.AbstractCRUD;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 
@@ -17,7 +18,6 @@ import javax.annotation.PostConstruct;
 public class CustomerService extends AbstractCRUD<CustomerEntity, Integer> {
 
     private CustomerRepository customerRepository;
-
     final private CustomerConvertor customerConvertor;
 
 
@@ -26,6 +26,7 @@ public class CustomerService extends AbstractCRUD<CustomerEntity, Integer> {
         setJpaRepository(customerRepository);
     }
 
+    @Transactional
     public CustomerDto registerCustomer(CustomerRequestDto customerRequestDto) {
 
         try {
@@ -36,14 +37,41 @@ public class CustomerService extends AbstractCRUD<CustomerEntity, Integer> {
                     .username(customerRequestDto.getUsername())
                     .password(customerRequestDto.getPassword())
                     .build();
-            
+
             CustomerEntity savedEntity = super.save(customer);
             return customerConvertor.entityToDto(savedEntity);
 
         } catch (CustomerException e) {
             throw new CustomerException();
         }
+    }
 
+    @Transactional
+    public CustomerDto editCustomer(Integer customerId, CustomerDto customerDto) {
+        try {
+            CustomerEntity foundedEntity = customerRepository.findById(customerId).get();
+
+            if (customerDto.getFirstName() != null) {
+                foundedEntity.setFirstName(customerDto.getFirstName());
+            }
+
+            if (customerDto.getFirstName() != null) {
+                foundedEntity.setFirstName(customerDto.getFirstName());
+            }
+
+            if (customerDto.getUsername() != null) {
+                foundedEntity.setUsername(customerDto.getUsername());
+            }
+
+            if (customerDto.getPassword() != null) {
+                foundedEntity.setPassword(customerDto.getPassword());
+            }
+
+            CustomerEntity updatedEntity = super.update(foundedEntity);
+            return customerConvertor.entityToDto(updatedEntity);
+        } catch (CustomerException e) {
+            throw new CustomerException();
+        }
     }
 
 
