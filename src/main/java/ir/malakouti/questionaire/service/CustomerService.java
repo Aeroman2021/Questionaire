@@ -4,7 +4,9 @@ import ir.malakouti.questionaire.convertor.CustomerConvertor;
 import ir.malakouti.questionaire.exception.CustomerException;
 import ir.malakouti.questionaire.model.dto.CustomerDto;
 import ir.malakouti.questionaire.model.dto.CustomerRequestDto;
+import ir.malakouti.questionaire.model.dto.QuestionDto;
 import ir.malakouti.questionaire.model.entity.CustomerEntity;
+import ir.malakouti.questionaire.model.entity.QuestionEntity;
 import ir.malakouti.questionaire.repo.CustomerRepository;
 import ir.malakouti.questionaire.service.core.AbstractCRUD;
 import lombok.RequiredArgsConstructor;
@@ -12,12 +14,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CustomerService extends AbstractCRUD<CustomerEntity, Integer> {
 
-    private CustomerRepository customerRepository;
+    final private CustomerRepository customerRepository;
     final private CustomerConvertor customerConvertor;
 
 
@@ -30,7 +34,6 @@ public class CustomerService extends AbstractCRUD<CustomerEntity, Integer> {
     public CustomerDto registerCustomer(CustomerRequestDto customerRequestDto) {
 
         try {
-
             CustomerEntity customer = CustomerEntity.builder()
                     .firstName(customerRequestDto.getFirstName())
                     .lastName(customerRequestDto.getLastName())
@@ -42,14 +45,14 @@ public class CustomerService extends AbstractCRUD<CustomerEntity, Integer> {
             return customerConvertor.entityToDto(savedEntity);
 
         } catch (CustomerException e) {
-            throw new CustomerException();
+            throw new CustomerException("Unable to register customer");
         }
     }
 
     @Transactional
     public CustomerDto editCustomer(Integer customerId, CustomerDto customerDto) {
         try {
-            CustomerEntity foundedEntity = customerRepository.findById(customerId).get();
+            CustomerEntity foundedEntity = super.loadById(customerId);
 
             if (customerDto.getFirstName() != null) {
                 foundedEntity.setFirstName(customerDto.getFirstName());
@@ -70,9 +73,19 @@ public class CustomerService extends AbstractCRUD<CustomerEntity, Integer> {
             CustomerEntity updatedEntity = super.update(foundedEntity);
             return customerConvertor.entityToDto(updatedEntity);
         } catch (CustomerException e) {
-            throw new CustomerException();
+            throw new CustomerException("Unable to update customer's information");
         }
     }
+
+    public List<CustomerDto> getAllCustomers(){
+        List<CustomerDto> customerDtos = new ArrayList<>();
+        for (CustomerEntity customerEntity : customerRepository.findAll()) {
+            CustomerDto customerDto = customerConvertor.entityToDto(customerEntity);
+            customerDtos.add(customerDto);
+        }
+        return customerDtos;
+    }
+
 
 
 }
