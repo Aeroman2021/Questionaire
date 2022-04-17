@@ -2,8 +2,11 @@ package ir.malakouti.questionaire.convertor;
 
 
 import ir.malakouti.questionaire.model.dto.QuestionDto;
+import ir.malakouti.questionaire.model.dto.QuestionOutputDto;
 import ir.malakouti.questionaire.model.entity.QuestionEntity;
+import org.springframework.stereotype.Component;
 
+@Component
 public class QuestionConvertor {
 
     public QuestionEntity dtoToEntity(QuestionDto questionDto){
@@ -30,6 +33,13 @@ public class QuestionConvertor {
         }
 
         return questionDto;
+    }
+
+    public QuestionOutputDto InputDtoToOutputDto(QuestionDto questionDto){
+        return QuestionOutputDto.builder()
+                .id(questionDto.getId())
+                .build();
+
     }
 
 
