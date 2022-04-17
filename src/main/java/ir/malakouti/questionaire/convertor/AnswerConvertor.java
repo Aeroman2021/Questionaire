@@ -3,7 +3,9 @@ package ir.malakouti.questionaire.convertor;
 import ir.malakouti.questionaire.model.dto.AnswerDto;
 import ir.malakouti.questionaire.model.dto.AnswerOutputDto;
 import ir.malakouti.questionaire.model.entity.AnswerEntity;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AnswerConvertor {
 
     public AnswerDto entityToDto(AnswerEntity answerEntity) {
