@@ -29,7 +29,7 @@ public class CustomerEntity {
     @OneToOne(mappedBy = "customer")
     private AnswerEntity answer;
 
-    @Column(name = "personal_character_number",nullable = false)
+    @Column(name = "personal_character_number")
     private Long personalCharacterNumber;
 
     @Column(nullable = false)
