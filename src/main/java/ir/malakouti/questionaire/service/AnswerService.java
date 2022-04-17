@@ -17,7 +17,7 @@ import javax.annotation.PostConstruct;
 @RequiredArgsConstructor
 public class AnswerService extends AbstractCRUD<AnswerEntity, Integer> {
 
-    private AnswerRepository answerRepository;
+    private final AnswerRepository answerRepository;
     private final AnswerConvertor answerConvertor;
 
     @PostConstruct
@@ -34,7 +34,6 @@ public class AnswerService extends AbstractCRUD<AnswerEntity, Integer> {
                     .question(answerRequestDto.getQuestion())
                     .rate(answerRequestDto.getRate())
                     .build();
-
             AnswerEntity result = answerRepository.save(answerEntity);
             return answerConvertor.entityToDto(result);
         } catch (AnswerException e) {
@@ -43,13 +42,12 @@ public class AnswerService extends AbstractCRUD<AnswerEntity, Integer> {
     }
 
     @Transactional
-    public AnswerDto updateAnswer(Integer questionId, AnswerDto answerDto) {
+    public AnswerDto updateAnswer(Integer answerId, AnswerDto answerDto) {
 
         try {
-            AnswerEntity foundedEntity = super.loadById(questionId);
+            AnswerEntity foundedEntity = super.loadById(answerId);
 
             foundedEntity.setCustomer(answerDto.getCustomer());
-            foundedEntity.setQuestion(answerDto.getQuestion());
             foundedEntity.setRate(answerDto.getRate());
 
             AnswerEntity result = answerRepository.save(foundedEntity);
