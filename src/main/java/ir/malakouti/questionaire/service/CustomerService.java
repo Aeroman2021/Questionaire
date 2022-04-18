@@ -77,6 +77,10 @@ public class CustomerService extends AbstractCRUD<CustomerEntity, Integer> {
         }
     }
 
+    public CustomerDto getCustomerById(Integer customerId){
+        return customerConvertor.entityToDto(super.loadById(customerId));
+    }
+
     public List<CustomerDto> getAllCustomers(){
         List<CustomerDto> customerDtos = new ArrayList<>();
         for (CustomerEntity customerEntity : customerRepository.findAll()) {
