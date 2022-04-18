@@ -47,7 +47,7 @@ public class AnswerController {
     }
 
 
-    @GetMapping
+    @GetMapping("answer/{id}")
     public ResponseEntity<ResponseResult<AnswerOutputDto>> getAnswerById(@PathVariable("id") Integer id) {
         AnswerEntity result = answerService.loadById(id);
         AnswerOutputDto answerOutputDto =
