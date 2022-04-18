@@ -2,6 +2,7 @@ package ir.malakouti.questionaire.service;
 
 import ir.malakouti.questionaire.convertor.QuestionConvertor;
 import ir.malakouti.questionaire.exception.QuestionException;
+import ir.malakouti.questionaire.model.dto.CustomerDto;
 import ir.malakouti.questionaire.model.dto.QuestionDto;
 import ir.malakouti.questionaire.model.dto.QuestionRequestDto;
 import ir.malakouti.questionaire.model.entity.QuestionEntity;
@@ -60,6 +61,10 @@ public class QuestionService extends AbstractCRUD<QuestionEntity, Integer> {
         }catch (QuestionException e){
             throw new QuestionException();
         }
+    }
+
+    public QuestionDto getQuestionById(Integer questionId){
+        return questionConvertor.entityToDto(super.loadById(questionId));
     }
 
 
