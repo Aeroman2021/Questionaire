@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -55,6 +57,19 @@ public class AnswerService extends AbstractCRUD<AnswerEntity, Integer> {
         } catch (AnswerException e) {
             throw new AnswerException("Unable to update Answer");
         }
+    }
+
+    public AnswerDto findAnswerById(Integer answerId){
+        AnswerEntity answerEntity = super.loadById(answerId);
+        return answerConvertor.entityToDto(answerEntity);
+    }
+
+    public List<AnswerDto> findAllAnswers(){
+        List<AnswerDto> answerDtos = new ArrayList<>();
+        for (AnswerEntity answerEntity : super.loadAll()) {
+            answerDtos.add(answerConvertor.entityToDto(answerEntity));
+        }
+        return answerDtos;
     }
 
 
