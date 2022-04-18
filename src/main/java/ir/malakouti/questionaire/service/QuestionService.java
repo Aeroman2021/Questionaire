@@ -35,7 +35,8 @@ public class QuestionService extends AbstractCRUD<QuestionEntity, Integer> {
                     .title(questionRequestDto.getTitle())
                     .description(questionRequestDto.getDescription())
                     .build();
-            return questionConvertor.entityToDto(super.save(question));
+            QuestionEntity result = super.save(question);
+            return questionConvertor.entityToDto(result);
 
         } catch (QuestionException e) {
             throw new QuestionException();
@@ -64,7 +65,8 @@ public class QuestionService extends AbstractCRUD<QuestionEntity, Integer> {
     }
 
     public QuestionDto getQuestionById(Integer questionId){
-        return questionConvertor.entityToDto(super.loadById(questionId));
+        QuestionEntity result = super.loadById(questionId);
+        return questionConvertor.entityToDto(result);
     }
 
 
