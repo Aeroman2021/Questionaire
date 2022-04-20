@@ -32,15 +32,9 @@ public class AbstractCRUD<T, ID> {
 
 
     public T loadById(ID id) {
-//        return  jpaRepository.findById(id).orElseThrow(
-//                ()-> new EntityNotFoundException("Entity with id " + id + " not existed!")
-//        );
-        try {
-            return jpaRepository.getById(id);
-        } catch (EntityNotFoundException e) {
-            throw new EntityNotFoundException();
-        }
-
+        return  jpaRepository.findById(id).orElseThrow(
+                ()-> new EntityNotFoundException("Entity with id " + id + " not existed!")
+        );
     }
 
     public List<T> loadAll() {
