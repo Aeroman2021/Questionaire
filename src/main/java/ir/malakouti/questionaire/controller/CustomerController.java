@@ -1,11 +1,12 @@
 package ir.malakouti.questionaire.controller;
 
 import ir.malakouti.questionaire.convertor.CustomerConvertor;
-import ir.malakouti.questionaire.model.dto.*;
+import ir.malakouti.questionaire.model.dto.CustomerDto;
+import ir.malakouti.questionaire.model.dto.CustomerOutputDto;
+import ir.malakouti.questionaire.model.dto.CustomerRequestDto;
 import ir.malakouti.questionaire.model.entity.CustomerEntity;
 import ir.malakouti.questionaire.service.CustomerService;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,16 +44,14 @@ public class CustomerController {
                 .body(ResponseResult.<CustomerOutputDto>builder()
                         .code(0)
                         .data(customerOutputDto)
-                        .message("Customer registered successfully...")
+                        .message("Customer updated successfully...")
                         .build());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("customer/{id}")
     public ResponseEntity<ResponseResult<CustomerOutputDto>> getCustomerById(@PathVariable("id") Integer id) {
-        CustomerEntity result = customerService.loadById(id);
-        CustomerOutputDto customerOutputDto =
-                customerConvertor.inputDtoToOutputDto(customerConvertor.entityToDto(result));
-
+        CustomerDto customerDto = customerService.getCustomerById(id);
+        CustomerOutputDto customerOutputDto = customerConvertor.inputDtoToOutputDto(customerDto);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseResult.<CustomerOutputDto>builder()
                         .code(0)
