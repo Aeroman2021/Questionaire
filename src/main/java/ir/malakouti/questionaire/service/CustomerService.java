@@ -58,8 +58,8 @@ public class CustomerService extends AbstractCRUD<CustomerEntity, Integer> {
                 foundedEntity.setFirstName(customerDto.getFirstName());
             }
 
-            if (customerDto.getFirstName() != null) {
-                foundedEntity.setFirstName(customerDto.getFirstName());
+            if (customerDto.getLastName() != null) {
+                foundedEntity.setLastName(customerDto.getLastName() );
             }
 
             if (customerDto.getUsername() != null) {
