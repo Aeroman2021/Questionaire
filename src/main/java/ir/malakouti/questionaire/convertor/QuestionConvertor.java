@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class QuestionConvertor {
 
-    public QuestionEntity dtoToEntity(QuestionDto questionDto){
+    public QuestionEntity dtoToEntity(QuestionDto questionDto) {
         QuestionEntity questionEntity = QuestionEntity.builder()
                 .title(questionDto.getTitle())
                 .description(questionDto.getDescription())
@@ -24,6 +24,7 @@ public class QuestionConvertor {
 
     public QuestionDto entityToDto(QuestionEntity questionEntity){
         QuestionDto questionDto = QuestionDto.builder()
+                .id(questionEntity.getId())
                 .title(questionEntity.getTitle())
                 .description(questionEntity.getDescription())
                 .build();
@@ -41,6 +42,5 @@ public class QuestionConvertor {
                 .build();
 
     }
-
 
 }
