@@ -4,6 +4,7 @@ package ir.malakouti.questionaire.model.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -26,8 +27,8 @@ public class CustomerEntity {
     @Column(nullable = false)
     private String lastName;
     
-    @OneToOne(mappedBy = "customer")
-    private AnswerEntity answer;
+    @OneToMany(mappedBy = "customer",fetch = FetchType.LAZY)
+    private List<AnswerEntity> answer;
 
     @Column(name = "personal_character_number")
     private Long personalCharacterNumber;
@@ -43,7 +44,7 @@ public class CustomerEntity {
         if (this == o) return true;
         if (!(o instanceof CustomerEntity)) return false;
         CustomerEntity user = (CustomerEntity) o;
-        return Objects.equals(id, user.id) &&
+        return
                 firstName.equals(user.firstName) &&
                 lastName.equals(user.lastName) &&
                 username.equals(user.username) &&
