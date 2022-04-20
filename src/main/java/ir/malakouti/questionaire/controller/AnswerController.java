@@ -47,17 +47,15 @@ public class AnswerController {
     }
 
 
-    @GetMapping
+    @GetMapping("/answer/{id}")
     public ResponseEntity<ResponseResult<AnswerOutputDto>> getAnswerById(@PathVariable("id") Integer id) {
-        AnswerEntity result = answerService.loadById(id);
-        AnswerOutputDto answerOutputDto =
-                answerConvertor.inputDtoToOutputDto(answerConvertor.entityToDto(result));
-
+        AnswerDto result = answerService.findAnswerById(id);
+        AnswerOutputDto answerOutputDto = answerConvertor.inputDtoToOutputDto(result);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseResult.<AnswerOutputDto>builder()
                         .code(0)
                         .data(answerOutputDto)
-                        .message("Answer list loaded successfully...")
+                        .message("Answer loaded successfully...")
                         .build());
     }
 
