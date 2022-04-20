@@ -1,5 +1,7 @@
 package ir.malakouti.questionaire.controller;
 
+import ir.malakouti.questionaire.controller.api.core.ResponseResult;
+import ir.malakouti.questionaire.controller.api.core.ServiceResult;
 import ir.malakouti.questionaire.convertor.AnswerConvertor;
 import ir.malakouti.questionaire.model.dto.*;
 import ir.malakouti.questionaire.model.entity.AnswerEntity;
@@ -21,60 +23,41 @@ public class AnswerController {
     private final AnswerConvertor answerConvertor;
 
     @PostMapping("/save")
-    public ResponseEntity<ResponseResult<AnswerOutputDto>> saveAnswer
+    public ResponseEntity<ServiceResult<AnswerOutputDto>> saveAnswer
             (@RequestBody AnswerRequestDto answerRequestDto) {
         AnswerDto result = answerService.saveAnswer(answerRequestDto);
         AnswerOutputDto answerOutputDto = answerConvertor.inputDtoToOutputDto(result);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ResponseResult.<AnswerOutputDto>builder()
-                        .code(0)
-                        .data(answerOutputDto)
-                        .message("Answer added successfully...")
-                        .build());
+        return ResponseEntity.ok(ServiceResult.success(answerOutputDto));
+
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ResponseResult<AnswerOutputDto>> editAnswer
+    public ResponseEntity<ServiceResult<AnswerOutputDto>> editAnswer
             (@PathVariable("id") Integer id, @RequestBody AnswerDto answerDto) {
         AnswerDto result = answerService.updateAnswer(id, answerDto);
         AnswerOutputDto answerOutputDto = answerConvertor.inputDtoToOutputDto(result);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseResult.<AnswerOutputDto>builder()
-                        .code(0)
-                        .data(answerOutputDto)
-                        .message("Answer updated successfully...")
-                        .build());
+        return ResponseEntity.ok(ServiceResult.success(answerOutputDto));
+
     }
 
 
     @GetMapping("/answer/{id}")
-    public ResponseEntity<ResponseResult<AnswerOutputDto>> getAnswerById(@PathVariable("id") Integer id) {
+    public ResponseEntity<ServiceResult<AnswerOutputDto>> getAnswerById(@PathVariable("id") Integer id) {
         AnswerDto result = answerService.findAnswerById(id);
         AnswerOutputDto answerOutputDto = answerConvertor.inputDtoToOutputDto(result);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseResult.<AnswerOutputDto>builder()
-                        .code(0)
-                        .data(answerOutputDto)
-                        .message("Answer loaded successfully...")
-                        .build());
+        return ResponseEntity.ok(ServiceResult.success(answerOutputDto));
     }
 
 
     @GetMapping
-    public ResponseEntity<ResponseResult<AnswerOutputDto>> getAllAnswers() {
+    public ResponseEntity<ServiceResult<AnswerOutputDto>> getAllAnswers() {
         List<AnswerOutputDto> answerOutputDtos = new ArrayList<>();
         for (AnswerEntity answerEntity : answerService.loadAll()) {
             AnswerOutputDto answerOutputDto =
                     answerConvertor.inputDtoToOutputDto(answerConvertor.entityToDto(answerEntity));
             answerOutputDtos.add(answerOutputDto);
         }
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseResult.<AnswerOutputDto>builder()
-                        .code(0)
-                        .dataList(answerOutputDtos)
-                        .message("Answer list loaded successfully...")
-                        .build());
+        return ResponseEntity.ok(ServiceResult.success(answerOutputDtos));
     }
 
 

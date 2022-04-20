@@ -1,10 +1,11 @@
 package ir.malakouti.questionaire.controller;
 
+import ir.malakouti.questionaire.controller.api.core.ResponseResult;
+import ir.malakouti.questionaire.controller.api.core.ServiceResult;
 import ir.malakouti.questionaire.convertor.CustomerConvertor;
 import ir.malakouti.questionaire.model.dto.CustomerDto;
 import ir.malakouti.questionaire.model.dto.CustomerOutputDto;
 import ir.malakouti.questionaire.model.dto.CustomerRequestDto;
-import ir.malakouti.questionaire.model.entity.CustomerEntity;
 import ir.malakouti.questionaire.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,57 +24,37 @@ public class CustomerController {
     private final CustomerConvertor customerConvertor;
 
     @PostMapping("/save")
-    public ResponseEntity<ResponseResult<CustomerOutputDto>> saveCustomer
+    public ResponseEntity<ServiceResult<CustomerOutputDto>> saveCustomer
             (@RequestBody CustomerRequestDto customerRequestDto) {
         CustomerDto result = customerService.registerCustomer(customerRequestDto);
         CustomerOutputDto customerOutputDto = customerConvertor.inputDtoToOutputDto(result);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ResponseResult.<CustomerOutputDto>builder()
-                        .code(0)
-                        .data(customerOutputDto)
-                        .message("Customer registered successfully...")
-                        .build());
+        return ResponseEntity.ok(ServiceResult.success(customerOutputDto));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ResponseResult<CustomerOutputDto>> editCustomer
+    public ResponseEntity<ServiceResult<CustomerOutputDto>> editCustomer
             (@PathVariable("id") Integer id, @RequestBody CustomerDto customerDto) {
         CustomerDto result = customerService.editCustomer(id, customerDto);
         CustomerOutputDto customerOutputDto = customerConvertor.inputDtoToOutputDto(result);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseResult.<CustomerOutputDto>builder()
-                        .code(0)
-                        .data(customerOutputDto)
-                        .message("Customer updated successfully...")
-                        .build());
+        return ResponseEntity.ok(ServiceResult.success(customerOutputDto));
     }
 
     @GetMapping("customer/{id}")
-    public ResponseEntity<ResponseResult<CustomerOutputDto>> getCustomerById(@PathVariable("id") Integer id) {
+    public ResponseEntity<ServiceResult<CustomerOutputDto>> getCustomerById(@PathVariable("id") Integer id) {
         CustomerDto customerDto = customerService.getCustomerById(id);
         CustomerOutputDto customerOutputDto = customerConvertor.inputDtoToOutputDto(customerDto);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseResult.<CustomerOutputDto>builder()
-                        .code(0)
-                        .data(customerOutputDto)
-                        .message("Customer list loaded successfully...")
-                        .build());
+        return ResponseEntity.ok(ServiceResult.success(customerOutputDto));
     }
 
 
     @GetMapping
-    public ResponseEntity<ResponseResult<CustomerOutputDto>> getAllCustomers() {
+    public ResponseEntity<ServiceResult<CustomerOutputDto>> getAllCustomers() {
         List<CustomerOutputDto> customerOutputDtos = new ArrayList<>();
         List<CustomerDto> result = customerService.getAllCustomers();
         for (CustomerDto customerDto : result) {
             CustomerOutputDto customerOutputDto = customerConvertor.inputDtoToOutputDto(customerDto);
             customerOutputDtos.add(customerOutputDto);
         }
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseResult.<CustomerOutputDto>builder()
-                        .code(0)
-                        .dataList(customerOutputDtos)
-                        .message("Customer list loaded successfully...")
-                        .build());
+        return ResponseEntity.ok(ServiceResult.success(customerOutputDtos));
     }
 }
