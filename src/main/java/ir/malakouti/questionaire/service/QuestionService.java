@@ -70,7 +70,7 @@ public class QuestionService extends AbstractCRUD<QuestionEntity, Integer> {
 
     public List<QuestionDto> getAllQuestions(){
         List<QuestionDto> questionDtos = new ArrayList<>();
-        for (QuestionEntity questionEntity : questionRepository.findAll()) {
+        for (QuestionEntity questionEntity : super.loadAll()) {
             QuestionDto questionDto = questionConvertor.entityToDto(questionEntity);
             questionDtos.add(questionDto);
         }
