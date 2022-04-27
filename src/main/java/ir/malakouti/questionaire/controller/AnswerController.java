@@ -1,13 +1,12 @@
 package ir.malakouti.questionaire.controller;
 
-import ir.malakouti.questionaire.controller.api.core.ResponseResult;
 import ir.malakouti.questionaire.controller.api.core.ServiceResult;
-import ir.malakouti.questionaire.convertor.AnswerConvertor;
-import ir.malakouti.questionaire.model.dto.*;
+import ir.malakouti.questionaire.convertor.AnswersConvertor;
+import ir.malakouti.questionaire.model.dto.AnswerDto;
+import ir.malakouti.questionaire.model.dto.AnswerRequestDto;
 import ir.malakouti.questionaire.model.entity.AnswerEntity;
-import ir.malakouti.questionaire.service.AnswerService;
+import ir.malakouti.questionaire.service.AnswerServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,45 +18,45 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AnswerController {
 
-    private final AnswerService answerService;
-    private final AnswerConvertor answerConvertor;
+    private final AnswerServiceImpl answerService;
+    private final AnswersConvertor answerConvertor;
 
     @PostMapping("/save")
-    public ResponseEntity<ServiceResult<AnswerOutputDto>> saveAnswer
+    public ResponseEntity<ServiceResult<AnswerDto>> saveAnswer
             (@RequestBody AnswerRequestDto answerRequestDto) {
-        AnswerDto result = answerService.saveAnswer(answerRequestDto);
-        AnswerOutputDto answerOutputDto = answerConvertor.inputDtoToOutputDto(result);
-        return ResponseEntity.ok(ServiceResult.success(answerOutputDto));
-
+        AnswerDto result = answerService.save(answerRequestDto);
+        return ResponseEntity.ok(ServiceResult.success(result));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ServiceResult<AnswerOutputDto>> editAnswer
+    public ResponseEntity<ServiceResult<AnswerDto>> editAnswer
             (@PathVariable("id") Integer id, @RequestBody AnswerDto answerDto) {
-        AnswerDto result = answerService.updateAnswer(id, answerDto);
-        AnswerOutputDto answerOutputDto = answerConvertor.inputDtoToOutputDto(result);
-        return ResponseEntity.ok(ServiceResult.success(answerOutputDto));
+        AnswerDto result = answerService.update(id, answerDto);
+        return ResponseEntity.ok(ServiceResult.success(result));
+    }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<ServiceResult<AnswerDto>> deleteAnswerById(@PathVariable("id") Integer id) {
+        AnswerDto result = answerService.findById(id);
+        answerService.DeleteById(id);
+        return ResponseEntity.ok(ServiceResult.success(result));
     }
 
 
     @GetMapping("/answer/{id}")
-    public ResponseEntity<ServiceResult<AnswerOutputDto>> getAnswerById(@PathVariable("id") Integer id) {
-        AnswerDto result = answerService.findAnswerById(id);
-        AnswerOutputDto answerOutputDto = answerConvertor.inputDtoToOutputDto(result);
-        return ResponseEntity.ok(ServiceResult.success(answerOutputDto));
+    public ResponseEntity<ServiceResult<AnswerDto>> getAnswerById(@PathVariable("id") Integer id) {
+        AnswerDto result = answerService.findById(id);
+        return ResponseEntity.ok(ServiceResult.success(result));
     }
 
 
     @GetMapping
-    public ResponseEntity<ServiceResult<AnswerOutputDto>> getAllAnswers() {
-        List<AnswerOutputDto> answerOutputDtos = new ArrayList<>();
-        for (AnswerEntity answerEntity : answerService.loadAll()) {
-            AnswerOutputDto answerOutputDto =
-                    answerConvertor.inputDtoToOutputDto(answerConvertor.entityToDto(answerEntity));
-            answerOutputDtos.add(answerOutputDto);
+    public ResponseEntity<ServiceResult<AnswerDto>> getAllAnswers() {
+        List<AnswerDto> answerDtos = new ArrayList<>();
+        for (AnswerDto tempAnswerDto : answerService.findAll()) {
+            answerDtos.add(tempAnswerDto);
         }
-        return ResponseEntity.ok(ServiceResult.success(answerOutputDtos));
+        return ResponseEntity.ok(ServiceResult.success(answerDtos));
     }
 
 
