@@ -1,11 +1,10 @@
 package ir.malakouti.questionaire.controller;
 
 import ir.malakouti.questionaire.controller.api.core.ServiceResult;
-import ir.malakouti.questionaire.convertor.QuestionConvertor;
+import ir.malakouti.questionaire.convertor.QuestionsConvertor;
 import ir.malakouti.questionaire.model.dto.QuestionDto;
-import ir.malakouti.questionaire.model.dto.QuestionOutputDto;
 import ir.malakouti.questionaire.model.dto.QuestionRequestDto;
-import ir.malakouti.questionaire.service.QuestionService;
+import ir.malakouti.questionaire.service.QuestionServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,39 +17,43 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QuestionController {
 
-    private final QuestionService questionService;
-    private final QuestionConvertor questionConvertor;
+    private final QuestionServiceImpl questionService;
+    private final QuestionsConvertor questionConvertor;
 
     @PostMapping("/save")
-    public ResponseEntity<ServiceResult<QuestionOutputDto>>
+    public ResponseEntity<ServiceResult<QuestionDto>>
     saveQuestion(@RequestBody QuestionRequestDto questionRequestDto) {
-        QuestionDto result = questionService.saveQuestion(questionRequestDto);
-        QuestionOutputDto questionOutputDto = questionConvertor.InputDtoToOutputDto(result);
-        return ResponseEntity.ok(ServiceResult.success(questionOutputDto));
+        QuestionDto result = questionService.save(questionRequestDto);
+        return ResponseEntity.ok(ServiceResult.success(result));
     }
 
     @PutMapping("question/{id}")
-    public ResponseEntity<ServiceResult<QuestionOutputDto>>
+    public ResponseEntity<ServiceResult<QuestionDto>>
     updateQuestion(@PathVariable("id") Integer id, @RequestBody QuestionDto questionDto) {
-        QuestionDto result = questionService.updateQuestion(id, questionDto);
-        QuestionOutputDto questionOutputDto = questionConvertor.InputDtoToOutputDto(result);
-        return ResponseEntity.ok(ServiceResult.success(questionOutputDto));
+        QuestionDto result = questionService.update(id, questionDto);
+        return ResponseEntity.ok(ServiceResult.success(result));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<ServiceResult<QuestionDto>> deleteQuestion(@PathVariable("id") Integer id) {
+        QuestionDto result = questionService.findById(id);
+        questionService.deleteById(id);
+        return ResponseEntity.ok(ServiceResult.success(result));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ServiceResult<QuestionOutputDto>> getQuestionById(@PathVariable("id") Integer id) {
-        QuestionDto result = questionService.getQuestionById(id);
-        QuestionOutputDto questionOutputDto = questionConvertor.InputDtoToOutputDto(result);
-        return ResponseEntity.ok(ServiceResult.success(questionOutputDto));
+    public ResponseEntity<ServiceResult<QuestionDto>> getQuestionById(@PathVariable("id") Integer id) {
+        QuestionDto result = questionService.findById(id);
+        return ResponseEntity.ok(ServiceResult.success(result));
     }
 
     @GetMapping
-    public ResponseEntity<ServiceResult<QuestionOutputDto>> loadAllQuestion(){
-        List<QuestionOutputDto> questionOutputDtos = new ArrayList<>();
-        for (QuestionDto questions : questionService.getAllQuestions()) {
-            questionOutputDtos.add(questionConvertor.InputDtoToOutputDto(questions));
+    public ResponseEntity<ServiceResult<QuestionDto>> loadAllQuestion(){
+        List<QuestionDto> questionDtos = new ArrayList<>();
+        for (QuestionDto questions : questionService.findAll()) {
+            questionDtos.add(questions);
         }
-        return ResponseEntity.ok(ServiceResult.success(questionOutputDtos));
+        return ResponseEntity.ok(ServiceResult.success(questionDtos));
     }
 
 
