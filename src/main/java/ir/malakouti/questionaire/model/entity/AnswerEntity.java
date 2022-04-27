@@ -23,12 +23,12 @@ public class AnswerEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne
-    private QuestionEntity question;
+    @OneToOne(orphanRemoval = true)
+    private QuestionEntity questionId;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
-    private CustomerEntity customer;
+    private CustomerEntity customerId;
 
     @Column(nullable = false)
     private Integer rate;
@@ -38,13 +38,15 @@ public class AnswerEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AnswerEntity that = (AnswerEntity) o;
-        return question.equals(that.question) &&
-                customer.equals(that.customer) &&
+        return questionId.equals(that.questionId) &&
+                customerId.equals(that.customerId) &&
                 rate.equals(that.rate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(question, customer, rate);
+        return Objects.hash(questionId, customerId, rate);
     }
+
+
 }
