@@ -1,14 +1,12 @@
 package ir.malakouti.questionaire.controller;
 
-import ir.malakouti.questionaire.controller.api.core.ResponseResult;
 import ir.malakouti.questionaire.controller.api.core.ServiceResult;
-import ir.malakouti.questionaire.convertor.CustomerConvertor;
+import ir.malakouti.questionaire.convertor.CustomersConvertor;
 import ir.malakouti.questionaire.model.dto.CustomerDto;
-import ir.malakouti.questionaire.model.dto.CustomerOutputDto;
 import ir.malakouti.questionaire.model.dto.CustomerRequestDto;
-import ir.malakouti.questionaire.service.CustomerService;
+import ir.malakouti.questionaire.model.dto.SearchDto;
+import ir.malakouti.questionaire.service.CustomerServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,41 +18,44 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomerController {
 
-    private final CustomerService customerService;
-    private final CustomerConvertor customerConvertor;
+
+    private final CustomersConvertor customerConvertor;
+    private final CustomerServiceImpl customerServiceImpl;
 
     @PostMapping("/save")
-    public ResponseEntity<ServiceResult<CustomerOutputDto>> saveCustomer
+    public ResponseEntity<ServiceResult<CustomerDto>> saveCustomer
             (@RequestBody CustomerRequestDto customerRequestDto) {
-        CustomerDto result = customerService.registerCustomer(customerRequestDto);
-        CustomerOutputDto customerOutputDto = customerConvertor.inputDtoToOutputDto(result);
-        return ResponseEntity.ok(ServiceResult.success(customerOutputDto));
+        CustomerDto result = customerServiceImpl.save(customerRequestDto);
+        return ResponseEntity.ok(ServiceResult.success(result));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ServiceResult<CustomerOutputDto>> editCustomer
+    public ResponseEntity<ServiceResult<CustomerDto>> editCustomer
             (@PathVariable("id") Integer id, @RequestBody CustomerDto customerDto) {
-        CustomerDto result = customerService.editCustomer(id, customerDto);
-        CustomerOutputDto customerOutputDto = customerConvertor.inputDtoToOutputDto(result);
-        return ResponseEntity.ok(ServiceResult.success(customerOutputDto));
+        CustomerDto result = customerServiceImpl.update(id,customerDto);
+        return ResponseEntity.ok(ServiceResult.success(result));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<ServiceResult<CustomerDto>> deleteCustomer(@PathVariable("id") Integer id) {
+        CustomerDto result = customerServiceImpl.findById(id);
+        customerServiceImpl.DeleteById(id);
+        return ResponseEntity.ok(ServiceResult.success(result));
     }
 
     @GetMapping("customer/{id}")
-    public ResponseEntity<ServiceResult<CustomerOutputDto>> getCustomerById(@PathVariable("id") Integer id) {
-        CustomerDto customerDto = customerService.getCustomerById(id);
-        CustomerOutputDto customerOutputDto = customerConvertor.inputDtoToOutputDto(customerDto);
-        return ResponseEntity.ok(ServiceResult.success(customerOutputDto));
+    public ResponseEntity<ServiceResult<CustomerDto>> getCustomerById(@PathVariable("id") Integer id) {
+        CustomerDto result = customerServiceImpl.findById(id);
+        return ResponseEntity.ok(ServiceResult.success(result));
     }
 
 
     @GetMapping
-    public ResponseEntity<ServiceResult<CustomerOutputDto>> getAllCustomers() {
-        List<CustomerOutputDto> customerOutputDtos = new ArrayList<>();
-        List<CustomerDto> result = customerService.getAllCustomers();
-        for (CustomerDto customerDto : result) {
-            CustomerOutputDto customerOutputDto = customerConvertor.inputDtoToOutputDto(customerDto);
-            customerOutputDtos.add(customerOutputDto);
+    public ResponseEntity<ServiceResult<CustomerDto>> getAllCustomers() {
+        List<CustomerDto> customerDtos = new ArrayList<>();
+        for (CustomerDto tempCustomer : customerServiceImpl.findAll()) {
+            customerDtos.add(tempCustomer);
         }
-        return ResponseEntity.ok(ServiceResult.success(customerOutputDtos));
+        return ResponseEntity.ok(ServiceResult.success(customerDtos));
     }
 }
