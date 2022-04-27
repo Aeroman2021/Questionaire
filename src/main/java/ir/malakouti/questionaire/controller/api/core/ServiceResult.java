@@ -69,14 +69,15 @@ public class ServiceResult<T> {
                 .build();
     }
 
-//    public static <T> ServiceResult<Void> fail(ApiError apiError){
-//        return ServiceResult.<T>builder()
-//                .code(apiError.getHttpStatus().value())
-//                .data(null)
-//                .dataList(null)
-//                .message(apiError.getMessage())
-//                .apiError(apiError)
-//                .build();
+    public static <T> ServiceResult<Void> fail(ApiError apiError){
+        return ServiceResult.<Void>builder()
+                .code(apiError.getHttpStatus().value())
+                .data(null)
+                .dataList(null)
+                .message(apiError.getMessage())
+                .apiError(apiError)
+                .build();
+    }
 }
 
 
