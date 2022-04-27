@@ -11,7 +11,7 @@ import lombok.*;
 @ToString
 @Builder
 public class AnswerRequestDto {
-    private QuestionEntity question;
-    private CustomerEntity customer;
+    private Integer questionId;
+    private Integer customerId;
     private Integer rate;
 }

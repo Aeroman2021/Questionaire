@@ -12,7 +12,7 @@ import lombok.*;
 public class CustomerRequestDto {
     private String firstName;
     private String lastName;
-    private AnswerEntity answer;
+    private AnswerDto answer;
     private Long personalCharacterNumber;
     private String username;
     private String password;
