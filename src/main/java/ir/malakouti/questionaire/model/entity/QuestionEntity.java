@@ -23,6 +23,10 @@ public class QuestionEntity {
     private String title;
 
 
+    @OneToOne(mappedBy = "question")
+    private AnswerEntity answerEntity;
+
+
     @Column(nullable = false)
     private String description;
 
