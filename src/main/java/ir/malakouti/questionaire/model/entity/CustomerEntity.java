@@ -27,7 +27,7 @@ public class CustomerEntity {
     @Column(nullable = false)
     private String lastName;
     
-    @OneToMany(mappedBy = "customer",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customer",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     private List<AnswerEntity> answer;
 
     @Column(name = "personal_character_number")
