@@ -4,7 +4,7 @@ import ir.malakouti.questionaire.controller.api.core.ServiceResult;
 import ir.malakouti.questionaire.convertor.QuestionsConvertor;
 import ir.malakouti.questionaire.model.dto.QuestionDto;
 import ir.malakouti.questionaire.model.dto.QuestionRequestDto;
-import ir.malakouti.questionaire.service.QuestionServiceImpl;
+import ir.malakouti.questionaire.service.impl.QuestionServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
